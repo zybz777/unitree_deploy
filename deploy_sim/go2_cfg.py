@@ -13,8 +13,12 @@ class Go2Cfg:
     simulation_dt: float = 0.005
     control_decimation: int = 4
 
-    kps = np.array([25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25])
-    kds = np.array([0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
+    kps = np.array([25, 25, 25, 25,
+                    25, 25, 25, 25,
+                    25, 25, 25, 25])
+    kds = np.array([0.5, 0.5, 0.5, 0.5,
+                    0.5, 0.5, 0.5, 0.5,
+                    0.5, 0.5, 0.5, 0.5])
 
     default_angles = np.array([-0.1, 0.8, -1.5,
                                0.1, 0.8, -1.5,
@@ -31,4 +35,4 @@ class Go2Cfg:
     num_obs: int = 213
     num_history: int = 5
 
-    cmd= np.array([0, 0, 0], dtype=np.float32)
+    cmd = np.array([0, 0, 0], dtype=np.float32)
