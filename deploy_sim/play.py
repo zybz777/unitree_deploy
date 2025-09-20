@@ -132,7 +132,7 @@ class Env:
                 self.obs[:3] = self.cfg.cmd
                 self.obs[3:] = obs_history
 
-                obs_tensor = torch.from_numpy(self.obs).to(self.device).unsqueeze(0)
+                obs_tensor = torch.from_numpy(self.obs).to(self.device)
                 self.action[:] = self.policy(obs_tensor).cpu().detach().numpy()[0]
 
                 target_q = self.cfg.default_angles + self.cfg.action_scale * self.action

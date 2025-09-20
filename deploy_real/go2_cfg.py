@@ -5,13 +5,16 @@ import numpy as np
 
 @dataclass
 class Go2Cfg:
-    xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
-
     policy_path: str = "policy/flat/0920-1.pt"
 
-    simulation_duration: float = 600.0
-    simulation_dt: float = 0.005
-    control_decimation: int = 4
+    control_dt: float = 0.02
+
+    msg_type: str = "go"
+
+    imu_type: str = "torso"
+
+    lowcmd_topic: str = "rt/lowcmd"
+    lowstate_topic: str = "rt/lowstate"
 
     kps = np.array([25, 25, 25, 25,
                     25, 25, 25, 25,
