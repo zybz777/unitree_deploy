@@ -10,7 +10,7 @@ source ~/.bashrc
 ```
 - Clone this repo
 ```bash
-git clone <this repo>
+git clone https://github.com/zybz777/unitree_deploy.git
 cd unitree_deploy
 uv sync
 source .venv/bin/activate
