@@ -24,12 +24,32 @@ uv pip install torch torchvision
 ```bash
 uv pip install mujoco
 ```
+- Install unitree_sdk2_python
+```bash
+# install cyclonedds
+cd ..
+git clone https://github.com/eclipse-cyclonedds/cyclonedds.git
+cd cyclonedds
+git checkout 0.10.2
+mkdir build install && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
+cmake --build . --target install
+cd ..
+export CYCLONEDDS_HOME="${pwd}/install"
+# install unitree_sdk2_python
+cd ..
+git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
+cd unitree_sdk2_python
+uv pip install -e .
+```
 ## Usage
-- Deploy policy to sim
+- Deploy policy to sim (↑↓←→ control robot)
 ```bash
 source .venv/bin/activate
 python ./deploy_sim/play.py
 ```
 - Deploy policy to real
 ```bash
+source .venv/bin/activate
+python ./deploy_real/play.py --net=xxx
 ```

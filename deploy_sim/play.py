@@ -32,6 +32,7 @@ class Env:
     def __init__(self, cfg: Go2Cfg):
         self.cfg = cfg
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        print("[policy device]: ", self.device)
         # load mujoco
         self.m = mujoco.MjModel.from_xml_path(self.cfg.xml_path)
         self.m.opt.timestep = self.cfg.simulation_dt
@@ -42,7 +43,6 @@ class Env:
         # load observation
         self.obs = np.zeros(self.cfg.num_obs, dtype=np.float32)
         self.action = np.zeros(self.cfg.num_actions, dtype=np.float32)
-        self.target_dof_pos = np.zeros_like(self.action, dtype=np.float32)
         self.base_ang_vel_history = np.zeros(3 * self.cfg.num_history, dtype=np.float32)
         self.projected_gravity_history = np.zeros_like(self.base_ang_vel_history, dtype=np.float32)
         self.q_history = np.zeros(12 * self.cfg.num_history, dtype=np.float32)
@@ -118,10 +118,10 @@ class Env:
                     self.q_history = np.roll(self.q_history, -12)
                     self.dq_history = np.roll(self.dq_history, -12)
                     self.action_history = np.roll(self.action_history, -12)
-                    self.base_ang_vel_history[-3:] = ang_vel * cfg.ang_vel_scale
+                    self.base_ang_vel_history[-3:] = ang_vel * self.cfg.ang_vel_scale
                     self.projected_gravity_history[-3:] = projected_gravity
-                    self.q_history[-12:] = q - cfg.default_angles
-                    self.dq_history[-12:] = dq * cfg.dof_vel_scale
+                    self.q_history[-12:] = q - self.cfg.default_angles
+                    self.dq_history[-12:] = dq * self.cfg.dof_vel_scale
                     self.action_history[-12:] = self.action
 
                 obs_history = np.concatenate([self.base_ang_vel_history,
@@ -133,7 +133,7 @@ class Env:
                 self.obs[3:] = obs_history
 
                 obs_tensor = torch.from_numpy(self.obs).to(self.device)
-                self.action[:] = self.policy(obs_tensor).cpu().detach().numpy()[0]
+                self.action[:] = self.policy(obs_tensor).cpu().detach().numpy()
 
                 target_q = self.cfg.default_angles + self.cfg.action_scale * self.action
 
@@ -152,6 +152,6 @@ class Env:
 
 
 if __name__ == '__main__':
-    cfg = Go2Cfg()
-    env = Env(cfg)
+    go2_cfg = Go2Cfg()
+    env = Env(go2_cfg)
     env.run()

@@ -18,15 +18,15 @@ class Go2Cfg:
 
     kps = np.array([25, 25, 25, 25,
                     25, 25, 25, 25,
-                    25, 25, 25, 25])
+                    25, 25, 25, 25], dtype=np.float32)
     kds = np.array([0.5, 0.5, 0.5, 0.5,
                     0.5, 0.5, 0.5, 0.5,
-                    0.5, 0.5, 0.5, 0.5])
+                    0.5, 0.5, 0.5, 0.5], dtype=np.float32)
 
     default_angles = np.array([-0.1, 0.8, -1.5,
                                0.1, 0.8, -1.5,
                                -0.1, 0.8, -1.5,
-                               0.1, 0.8, -1.5])
+                               0.1, 0.8, -1.5], dtype=np.float32)
 
     ang_vel_scale: float = 0.2
     dof_pos_scale: float = 1.0
