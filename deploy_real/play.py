@@ -162,6 +162,10 @@ class Controller:
                                       self.q_history,
                                       self.dq_history,
                                       self.action_history])
+        self.cmd[0] = self.remote_controller.ly
+        self.cmd[1] = self.remote_controller.lx * -1
+        self.cmd[2] = self.remote_controller.rx * -1
+
         self.obs[:3] = self.cmd
         self.obs[3:] = obs_history
 
