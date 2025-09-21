@@ -106,18 +106,18 @@ class Env:
                 dq = self.get_dq()
 
                 if not self.rl_start_flag:
-                    self.base_ang_vel_history = np.tile(ang_vel * self.cfg.ang_vel_scale, self.cfg.num_history)
-                    self.projected_gravity_history = np.tile(projected_gravity, self.cfg.num_history)
-                    self.q_history = np.tile(q - self.cfg.default_angles, self.cfg.num_history)
-                    self.dq_history = np.tile(dq * self.cfg.dof_vel_scale, self.cfg.num_history)
-                    self.action_history = np.tile(self.action, self.cfg.num_history)
+                    self.base_ang_vel_history[:]  = np.tile(ang_vel * self.cfg.ang_vel_scale, self.cfg.num_history)
+                    self.projected_gravity_history[:]  = np.tile(projected_gravity, self.cfg.num_history)
+                    self.q_history[:]  = np.tile(q - self.cfg.default_angles, self.cfg.num_history)
+                    self.dq_history[:]  = np.tile(dq * self.cfg.dof_vel_scale, self.cfg.num_history)
+                    self.action_history[:]  = np.tile(self.action, self.cfg.num_history)
                     self.rl_start_flag = True
                 else:
-                    self.base_ang_vel_history = np.roll(self.base_ang_vel_history, -3)
-                    self.projected_gravity_history = np.roll(self.projected_gravity_history, -3)
-                    self.q_history = np.roll(self.q_history, -12)
-                    self.dq_history = np.roll(self.dq_history, -12)
-                    self.action_history = np.roll(self.action_history, -12)
+                    self.base_ang_vel_history[:]  = np.roll(self.base_ang_vel_history, -3)
+                    self.projected_gravity_history[:]  = np.roll(self.projected_gravity_history, -3)
+                    self.q_history[:]  = np.roll(self.q_history, -12)
+                    self.dq_history[:]  = np.roll(self.dq_history, -12)
+                    self.action_history[:]  = np.roll(self.action_history, -12)
                     self.base_ang_vel_history[-3:] = ang_vel * self.cfg.ang_vel_scale
                     self.projected_gravity_history[-3:] = projected_gravity
                     self.q_history[-12:] = q - self.cfg.default_angles
