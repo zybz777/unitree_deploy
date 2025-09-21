@@ -12,7 +12,8 @@ source ~/.bashrc
 ```bash
 git clone https://github.com/zybz777/unitree_deploy.git
 cd unitree_deploy
-uv sync
+# default python 3.11
+uv sync 
 source .venv/bin/activate
 ```
 - Install torch
@@ -35,7 +36,7 @@ mkdir build install && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
 cmake --build . --target install
 cd ..
-export CYCLONEDDS_HOME="${pwd}/install"
+export CYCLONEDDS_HOME="$(pwd)/install"
 # install unitree_sdk2_python
 cd ..
 git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
