@@ -6,7 +6,8 @@ from unitree_sdk2py.core.channel import ChannelPublisher, ChannelSubscriber, Cha
 from unitree_sdk2py.idl.default import unitree_go_msg_dds__LowCmd_, unitree_go_msg_dds__LowState_
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowCmd_ as LowCmdGo
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_ as LowStateGo
-
+from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
+from unitree_sdk2py.go2.sport.sport_client import SportClient
 from unitree_sdk2py.utils.crc import CRC
 
 from go2_cfg import Go2Cfg
@@ -48,6 +49,21 @@ class Controller:
 
         self._wait_for_low_state()
         init_cmd(self.low_cmd)
+
+        self.sc = SportClient()
+        self.sc.SetTimeout(5.0)
+        self.sc.Init()
+
+        self.msc = MotionSwitcherClient()
+        self.msc.SetTimeout(5.0)
+        self.msc.Init()
+
+        status, result = self.msc.CheckMode()
+        while result['name']:
+            self.sc.StandDown()
+            self.msc.ReleaseMode()
+            status, result = self.msc.CheckMode()
+            time.sleep(1)
 
     def _warm_up(self):
         obs = torch.zeros(self.cfg.num_obs, dtype=torch.float32, device=self.device)
