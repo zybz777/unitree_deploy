@@ -7,7 +7,8 @@ import numpy as np
 class Go2Cfg:
     xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
 
-    policy_path: str = "policy/flat/0920-1.pt"
+    # policy_path: str = "policy/flat/0920-1.pt"
+    policy_path: str = "policy/rough/1001-1.pt"
 
     simulation_duration: float = 600.0
     simulation_dt: float = 0.005
@@ -32,7 +33,7 @@ class Go2Cfg:
     action_scale: float = 0.25
 
     num_actions: int = 12
-    num_obs: int = 213
-    num_history: int = 5
+    num_obs: int = 423
+    num_history: int = 10
 
     cmd = np.array([0, 0, 0], dtype=np.float32)
