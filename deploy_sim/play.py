@@ -104,7 +104,7 @@ class Env:
 
                 q = self.get_q()
                 dq = self.get_dq()
-
+                # print(projected_gravity)
                 if not self.rl_start_flag:
                     self.base_ang_vel_history[:]  = np.tile(ang_vel * self.cfg.ang_vel_scale, self.cfg.num_history)
                     self.projected_gravity_history[:]  = np.tile(projected_gravity, self.cfg.num_history)
