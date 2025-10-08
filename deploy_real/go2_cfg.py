@@ -5,7 +5,7 @@ import numpy as np
 
 @dataclass
 class Go2Cfg:
-    policy_path: str = "policy/rough/1006-2.pt"
+    policy_path: str = "policy/rough/1008-1.pt"
 
     control_dt: float = 0.02
 
@@ -25,8 +25,8 @@ class Go2Cfg:
 
     default_angles = np.array([-0.1, 0.8, -1.5,
                                0.1, 0.8, -1.5,
-                               -0.1, 1.0, -1.5,
-                               0.1, 1.0, -1.5], dtype=np.float32)
+                               -0.1, 0.8, -1.5,
+                               0.1, 0.8, -1.5], dtype=np.float32)
 
     ang_vel_scale: float = 0.2
     dof_pos_scale: float = 1.0

@@ -7,8 +7,8 @@ import numpy as np
 class Go2Cfg:
     xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
 
-    # policy_path: str = "policy/flat/1004-8.pt"
-    policy_path: str = "policy/rough/1006-2.pt"
+    # policy_path: str = "policy/flat/1006-1.pt"
+    policy_path: str = "policy/rough/1008-1.pt"
 
     simulation_duration: float = 600.0
     simulation_dt: float = 0.005
@@ -23,8 +23,8 @@ class Go2Cfg:
 
     default_angles = np.array([-0.1, 0.8, -1.5,
                                0.1, 0.8, -1.5,
-                               -0.1, 1.0, -1.5,
-                               0.1, 1.0, -1.5], dtype=np.float32)
+                               -0.1, 0.8, -1.5,
+                               0.1, 0.8, -1.5], dtype=np.float32)
 
     ang_vel_scale: float = 0.2
     dof_pos_scale: float = 1.0
