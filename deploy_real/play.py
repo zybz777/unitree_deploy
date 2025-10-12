@@ -131,7 +131,7 @@ class Controller:
             self.qj[i] = self.low_state.motor_state[i].q
             self.dqj[i] = self.low_state.motor_state[i].dq
 
-        quat = np.array([self.low_state.imu_state.quaternion], dtype=np.float32)
+        quat = self.low_state.imu_state.quaternion
         ang_vel = np.array([self.low_state.imu_state.gyroscope], dtype=np.float32)
         projected_gravity = get_gravity_orientation(quat)  # imu_state quaternion: w, x, y, z
 
