@@ -5,7 +5,7 @@ import numpy as np
 
 @dataclass
 class Go2Cfg:
-    policy_path: str = "policy/rough/1008-1.pt"
+    policy_path: str = "policy/rough/1013-1.pt"
 
     control_dt: float = 0.02
 
