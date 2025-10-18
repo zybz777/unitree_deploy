@@ -212,4 +212,9 @@ if __name__ == '__main__':
 
     create_damping_cmd(controller.low_cmd)
     controller.send_cmd(controller.low_cmd)
+
+    time.sleep(3.0)
+    controller.msc.SelectMode("mcf")
+    controller.sc.StandDown()
+
     print('Exit')

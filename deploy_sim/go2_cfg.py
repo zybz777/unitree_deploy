@@ -8,7 +8,7 @@ class Go2Cfg:
     xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
 
     # policy_path: str = "policy/flat/1006-1.pt"
-    policy_path: str = "policy/rough/1008-1.pt"
+    policy_path: str = "policy/rough/1016-1.pt"
 
     simulation_duration: float = 600.0
     simulation_dt: float = 0.005
