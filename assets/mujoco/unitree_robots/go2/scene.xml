@@ -23,16 +23,16 @@
 <!--    <geom pos="1.2 0 0.04" type="box"  size="0.1 2 0.04" quat="1.0 0 0 0"/>-->
 <!--    <geom pos="1.6 0 0.04" type="box"  size="0.1 2 0.04" quat="1.0 0 0 0"/>-->
 
-    <geom pos="2.0 0 0.075" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="2.3 0 0.225" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="2.6 0 0.375" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="2.9 0 0.525" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="3.2 0 0.675" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="3.5 0 0.825" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="3.8 0 0.975" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="4.1 0 1.125" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="4.4 0 1.275" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
-    <geom pos="4.7 0 1.425" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>
+<!--    <geom pos="2.0 0 0.075" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="2.3 0 0.225" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="2.6 0 0.375" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="2.9 0 0.525" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="3.2 0 0.675" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="3.5 0 0.825" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="3.8 0 0.975" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="4.1 0 1.125" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="4.4 0 1.275" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
+<!--    <geom pos="4.7 0 1.425" type="box"  size="0.15 2 0.075" quat="1.0 0 0 0"/>-->
 <!--    <geom pos="2.6 0 0.02" type="box"  size="0.22 2 0.3" quat="1.0 0 0 0"/>-->
 <!--    <geom pos="2.8 0 0.02" type="box"  size="0.23 2 0.45" quat="1.0 0 0 0"/>-->
 <!--    <geom pos="3 0 0.02" type="box"  size="0.24 2 0.6" quat="1.0 0 0 0"/>-->

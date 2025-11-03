@@ -277,6 +277,7 @@
     <framequat name="imu_quat" objtype="site" objname="imu" />
     <gyro name="imu_gyro" site="imu" />
     <accelerometer name="imu_acc" site="imu" />
+    <velocimeter name="imu_vel" site="imu" />
     
     <framepos name="frame_pos" objtype="site" objname="imu" />
     <framelinvel name="frame_vel" objtype="site" objname="imu" />

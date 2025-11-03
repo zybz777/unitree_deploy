@@ -6,6 +6,7 @@ import numpy as np
 import torch
 
 from go2_cfg import Go2Cfg
+from go2_logger import Go2Logger
 
 
 def get_gravity_orientation(quaternion):
@@ -49,6 +50,8 @@ class Env:
         self.dq_history = np.zeros_like(self.q_history, dtype=np.float32)
         self.action_history = np.zeros_like(self.q_history, dtype=np.float32)
         self.rl_start_flag: bool = False
+        # logger
+        self.logger = Go2Logger(log_type=self.cfg.logger_type)
 
     def get_q(self):
         q = np.array([
@@ -92,6 +95,7 @@ class Env:
         print(self.cfg.cmd)
 
     def run(self):
+        time_step = 0
         with mujoco.viewer.launch_passive(self.m, self.d, key_callback=self.key_callback) as viewer:
             start_time = time.time()
             step_dt = self.cfg.control_decimation * self.cfg.simulation_dt
@@ -106,18 +110,18 @@ class Env:
                 dq = self.get_dq()
                 # print(projected_gravity)
                 if not self.rl_start_flag:
-                    self.base_ang_vel_history[:]  = np.tile(ang_vel * self.cfg.ang_vel_scale, self.cfg.num_history)
-                    self.projected_gravity_history[:]  = np.tile(projected_gravity, self.cfg.num_history)
-                    self.q_history[:]  = np.tile(q - self.cfg.default_angles, self.cfg.num_history)
-                    self.dq_history[:]  = np.tile(dq * self.cfg.dof_vel_scale, self.cfg.num_history)
-                    self.action_history[:]  = np.tile(self.action, self.cfg.num_history)
+                    self.base_ang_vel_history[:] = np.tile(ang_vel * self.cfg.ang_vel_scale, self.cfg.num_history)
+                    self.projected_gravity_history[:] = np.tile(projected_gravity, self.cfg.num_history)
+                    self.q_history[:] = np.tile(q - self.cfg.default_angles, self.cfg.num_history)
+                    self.dq_history[:] = np.tile(dq * self.cfg.dof_vel_scale, self.cfg.num_history)
+                    self.action_history[:] = np.tile(self.action, self.cfg.num_history)
                     self.rl_start_flag = True
                 else:
-                    self.base_ang_vel_history[:]  = np.roll(self.base_ang_vel_history, -3)
-                    self.projected_gravity_history[:]  = np.roll(self.projected_gravity_history, -3)
-                    self.q_history[:]  = np.roll(self.q_history, -12)
-                    self.dq_history[:]  = np.roll(self.dq_history, -12)
-                    self.action_history[:]  = np.roll(self.action_history, -12)
+                    self.base_ang_vel_history[:] = np.roll(self.base_ang_vel_history, -3)
+                    self.projected_gravity_history[:] = np.roll(self.projected_gravity_history, -3)
+                    self.q_history[:] = np.roll(self.q_history, -12)
+                    self.dq_history[:] = np.roll(self.dq_history, -12)
+                    self.action_history[:] = np.roll(self.action_history, -12)
                     self.base_ang_vel_history[-3:] = ang_vel * self.cfg.ang_vel_scale
                     self.projected_gravity_history[-3:] = projected_gravity
                     self.q_history[-12:] = q - self.cfg.default_angles
@@ -138,14 +142,27 @@ class Env:
                 target_q = self.cfg.default_angles + self.cfg.action_scale * self.action
 
                 for _ in range(self.cfg.control_decimation):
-                    q = self.get_q()
-                    dq = self.get_dq()
-                    tau = pd_control(target_q, q, self.cfg.kps, 0, dq, self.cfg.kds)
+                    tau = pd_control(target_q, self.get_q(), self.cfg.kps, 0, self.get_dq(), self.cfg.kds)
                     self.d.ctrl = tau
                     mujoco.mj_step(self.m, self.d)
 
-                viewer.sync()
+                # ---- log ---- #
+                lin_vel = self.d.sensor("imu_vel").data
+                base_pos = self.d.sensor("frame_pos").data
+                log_obs = {
+                    "cmd": self.cfg.cmd,
+                    "lin_vel": lin_vel,
+                    "base_pos": base_pos,
+                    "projected_gravity": projected_gravity,
+                    "ang_vel": ang_vel,
+                    "q": q,
+                    "dq": dq,
+                    "tau": pd_control(target_q, q, self.cfg.kps, 0, dq, self.cfg.kds),
+                }
+                self.logger.log(log_obs, time_step)
+                time_step += 1
 
+                viewer.sync()
                 time_until_next_step = step_dt - (time.time() - step_start)
                 if time_until_next_step > 0:
                     time.sleep(time_until_next_step)
