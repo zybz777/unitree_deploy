@@ -7,11 +7,16 @@ import numpy as np
 class Go2Cfg:
     xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
 
+    log_enable: bool = True
     # policy_path: str = "policy/flat/1006-1.pt"
     # policy_path: str = "policy/rough/1014-1.pt"
     # logger_type: str = "our_flat"
-    policy_path: str = "policy/dreamwaq/rough/1015-1.pt"
-    logger_type: str = "dreamwaq_flat"
+    # policy_path: str = "policy/rough/1107-1-s.pt"
+    # logger_type: str = "our_flat_slim"
+    policy_path: str = "policy/wo_contact/rough/1108-1-s.pt"
+    logger_type: str = "our_wo_contact_flat_slim"
+    # policy_path: str = "policy/dreamwaq/rough/1015-1.pt"
+    # logger_type: str = "dreamwaq_flat"
 
     simulation_duration: float = 600.0
     simulation_dt: float = 0.005
@@ -39,4 +44,4 @@ class Go2Cfg:
     num_obs: int = 423
     num_history: int = 10
 
-    cmd = np.array([1.0, 0, 0], dtype=np.float32)
+    cmd = np.array([1.0, 0.0, 0.0], dtype=np.float32)

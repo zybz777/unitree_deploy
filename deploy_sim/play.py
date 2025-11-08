@@ -147,20 +147,21 @@ class Env:
                     mujoco.mj_step(self.m, self.d)
 
                 # ---- log ---- #
-                lin_vel = self.d.sensor("imu_vel").data
-                base_pos = self.d.sensor("frame_pos").data
-                log_obs = {
-                    "cmd": self.cfg.cmd,
-                    "lin_vel": lin_vel,
-                    "base_pos": base_pos,
-                    "projected_gravity": projected_gravity,
-                    "ang_vel": ang_vel,
-                    "q": q,
-                    "dq": dq,
-                    "tau": pd_control(target_q, q, self.cfg.kps, 0, dq, self.cfg.kds),
-                }
-                self.logger.log(log_obs, time_step)
-                time_step += 1
+                if self.cfg.log_enable:
+                    lin_vel = self.d.sensor("imu_vel").data
+                    base_pos = self.d.sensor("frame_pos").data
+                    log_obs = {
+                        "cmd": self.cfg.cmd,
+                        "lin_vel": lin_vel,
+                        "base_pos": base_pos,
+                        "projected_gravity": projected_gravity,
+                        "ang_vel": ang_vel,
+                        "q": q,
+                        "dq": dq,
+                        "tau": pd_control(target_q, q, self.cfg.kps, 0, dq, self.cfg.kds),
+                    }
+                    self.logger.log(log_obs, time_step)
+                    time_step += 1
 
                 viewer.sync()
                 time_until_next_step = step_dt - (time.time() - step_start)

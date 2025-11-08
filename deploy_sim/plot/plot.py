@@ -5,34 +5,46 @@ import os
 
 # ===== 全局配置 =====
 CSV_PATHS = [
-    ("logs_csv/our_flat/obs.csv",       "Our"),
-    ("logs_csv/dreamwaq_flat/obs.csv",  "DreamWaQ"),
+    ("logs_csv/our_flat_slim/obs.csv", "Our"),
+    ("logs_csv/our_wo_contact_flat_slim/obs.csv", "Our w/o contact"),
+    ("logs_csv/dreamwaq_flat/obs.csv", "DreamWaQ"),
 ]
-START_STEP = 500
-END_STEP   = 1000
-DQ_PREFIX  = "dq_"
+START_STEP = 1000
+END_STEP = 1500
+DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"
 
 # === 平滑参数设置 ===
-GLOBAL_SMOOTHING   = 0.95  # 默认平滑系数
-SMOOTHING_POWER    = None  # 功率图平滑（None→用全局）
-SMOOTHING_LINVEL   = 0.95  # 线速度相关 MSE 的平滑
-SMOOTHING_ANGVEL   = 0.95  # 角速度相关量（含 MSE）的平滑
+GLOBAL_SMOOTHING = 0.98  # 默认平滑系数
+SMOOTHING_POWER = None  # 功率图平滑（None→用全局）
+SMOOTHING_LINVEL = 0.98  # 线速度相关 MSE/平方 的平滑
+SMOOTHING_ANGVEL = 0.98  # 角速度相关量（含 MSE）的平滑
 # ====================
 
-SAVE_PATH_POWER    = "logs_csv/power_compare_smooth.png"
-SAVE_PATH_LINVEL0  = "logs_csv/linvel0_mse_compare_smooth.png"
-SAVE_PATH_ANGVELXY = "logs_csv/angvel_xy_norm_compare_smooth.png"
-# 新增两幅图的输出
-SAVE_PATH_LINVEL1  = "logs_csv/linvel1_mse_compare_smooth.png"
-SAVE_PATH_ANGVEL2  = "logs_csv/angvel2_mse_compare_smooth.png"
+SAVE_PATH_POWER = "logs_csv/power_compare_smooth.png"
+SAVE_PATH_LINVEL0 = "logs_csv/linvel0_mse_compare_smooth.png"
+SAVE_PATH_LINVEL1 = "logs_csv/linvel1_mse_compare_smooth.png"
+SAVE_PATH_ANGVEL2 = "logs_csv/angvel2_mse_compare_smooth.png"
+SAVE_PATH_LINVEL2SQ = "logs_csv/linvel2_sq_compare_smooth.png"
+SAVE_PATH_ANGVEL0 = "logs_csv/angvel0_mse_compare_smooth.png"
+SAVE_PATH_ANGVEL1 = "logs_csv/angvel1_mse_compare_smooth.png"
+
+# === 新增：箱线图保存路径 ===
+SAVE_PATH_BOX_TRACK = "logs_csv/box_tracking_mse.png"  # 跟踪误差
+SAVE_PATH_BOX_STAB = "logs_csv/box_stability_mse.png"  # 稳定性
+SAVE_PATH_BOX_ENERGY = "logs_csv/box_energy.png"  # 能耗
+
+
 # =====================
 
 
 def smooth_ema(x, alpha):
     """指数滑动平均（TensorBoard 风格 EMA）"""
     if alpha <= 0:
-        return x.copy()
+        return np.asarray(x, dtype=float).copy()
+    x = np.asarray(x, dtype=float)
+    if x.size == 0:
+        return x
     if alpha >= 1:
         return np.full_like(x, x[0])
     y = np.empty_like(x, dtype=float)
@@ -45,43 +57,33 @@ def smooth_ema(x, alpha):
 def compute_power_full(csv_path, alpha):
     """整段计算每步总功率，并平滑。"""
     df = pd.read_csv(csv_path)
-    dq_cols  = sorted([c for c in df.columns if c.startswith(DQ_PREFIX)],
-                      key=lambda x: int(x[len(DQ_PREFIX):]))
+    dq_cols = sorted([c for c in df.columns if c.startswith(DQ_PREFIX)],
+                     key=lambda x: int(x[len(DQ_PREFIX):]) if x[len(DQ_PREFIX):].isdigit() else x)
     tau_cols = sorted([c for c in df.columns if c.startswith(TAU_PREFIX)],
-                      key=lambda x: int(x[len(TAU_PREFIX):]))
-    dq   = np.abs(df[dq_cols].to_numpy(dtype=float))
-    tau  = np.abs(df[tau_cols].to_numpy(dtype=float))
+                      key=lambda x: int(x[len(TAU_PREFIX):]) if x[len(TAU_PREFIX):].isdigit() else x)
+    if "step" not in df.columns or len(dq_cols) == 0 or len(tau_cols) == 0 or len(dq_cols) != len(tau_cols):
+        raise ValueError(f"{csv_path} 功率相关列缺失或数量不匹配")
+    dq = np.abs(df[dq_cols].to_numpy(dtype=float))
+    tau = np.abs(df[tau_cols].to_numpy(dtype=float))
     power = np.sum(dq * tau, axis=1)
     steps = df["step"].to_numpy()
     return steps, smooth_ema(power, alpha)
 
 
 def compute_linvel0_mse_full(csv_path, alpha):
-    """整段计算 lin_vel_0 vs cmd_0 的逐步 MSE，并平滑。"""
     df = pd.read_csv(csv_path)
     err = (df["lin_vel_0"].to_numpy(dtype=float) - df["cmd_0"].to_numpy(dtype=float)) ** 2
     steps = df["step"].to_numpy()
     return steps, smooth_ema(err, alpha)
 
 
-def compute_angvel_xy_norm_full(csv_path, alpha):
-    """整段计算 XY 角速度平方和 (ang_vel_0^2 + ang_vel_1^2)，并平滑。"""
-    df = pd.read_csv(csv_path)
-    ang0 = df["ang_vel_0"].to_numpy(dtype=float)
-    ang1 = df["ang_vel_1"].to_numpy(dtype=float)
-    norm_xy_sq = ang0 ** 2 + ang1 ** 2
-    steps = df["step"].to_numpy()
-    return steps, smooth_ema(norm_xy_sq, alpha)
-
-
-# === 新增：lin_vel_1 vs cmd_1 的 MSE（整段平滑） ===
 def compute_linvel1_mse_full(csv_path, alpha):
     df = pd.read_csv(csv_path)
     err = (df["lin_vel_1"].to_numpy(dtype=float) - df["cmd_1"].to_numpy(dtype=float)) ** 2
     steps = df["step"].to_numpy()
     return steps, smooth_ema(err, alpha)
 
-# === 新增：ang_vel_2 vs cmd_2 的 MSE（整段平滑） ===
+
 def compute_angvel2_mse_full(csv_path, alpha):
     df = pd.read_csv(csv_path)
     err = (df["ang_vel_2"].to_numpy(dtype=float) - df["cmd_2"].to_numpy(dtype=float)) ** 2
@@ -89,8 +91,30 @@ def compute_angvel2_mse_full(csv_path, alpha):
     return steps, smooth_ema(err, alpha)
 
 
+def compute_linvel2_sq_full(csv_path, alpha):
+    df = pd.read_csv(csv_path)
+    lin2 = df["lin_vel_2"].to_numpy(dtype=float)
+    sq = lin2 ** 2
+    steps = df["step"].to_numpy()
+    return steps, smooth_ema(sq, alpha)
+
+
+def compute_angvel0_mse_full(csv_path, alpha):
+    df = pd.read_csv(csv_path)
+    err = (df["ang_vel_0"].to_numpy(dtype=float)) ** 2  # vs 0
+    steps = df["step"].to_numpy()
+    return steps, smooth_ema(err, alpha)
+
+
+def compute_angvel1_mse_full(csv_path, alpha):
+    df = pd.read_csv(csv_path)
+    err = (df["ang_vel_1"].to_numpy(dtype=float)) ** 2  # vs 0
+    steps = df["step"].to_numpy()
+    return steps, smooth_ema(err, alpha)
+
+
 def plot_series(series, ylabel, title, save_path, alpha):
-    """通用绘图函数：裁剪、按 step 交集对齐后绘制"""
+    """通用绘图：裁剪、按 step 交集对齐后绘制"""
     if len(series) < 2:
         print("[Warn] 有数据集缺失，无法绘制。")
         return
@@ -120,17 +144,19 @@ def plot_series(series, ylabel, title, save_path, alpha):
     plt.xlabel("Step")
     plt.ylabel(ylabel)
     plt.title(f"{title} (smoothing={alpha})")
-    plt.grid(True, linestyle="-", linewidth=0.5)   # 实线网格
+    plt.grid(True, linestyle="-", linewidth=0.5)  # 实线网格
     plt.legend(loc="upper right")
     plt.tight_layout()
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    out_dir = os.path.dirname(save_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     plt.savefig(save_path, dpi=200)
     print(f"[Done] 图像已保存到 {save_path}")
 
 
 def main():
     # 获取每图平滑值（若未定义则用全局默认）
-    a_power  = SMOOTHING_POWER  if SMOOTHING_POWER  is not None else GLOBAL_SMOOTHING
+    a_power = SMOOTHING_POWER if SMOOTHING_POWER is not None else GLOBAL_SMOOTHING
     a_linvel = SMOOTHING_LINVEL if SMOOTHING_LINVEL is not None else GLOBAL_SMOOTHING
     a_angvel = SMOOTHING_ANGVEL if SMOOTHING_ANGVEL is not None else GLOBAL_SMOOTHING
 
@@ -154,17 +180,27 @@ def main():
             print(f"[Warn] {path}: {e}")
     plot_series(series, "MSE of lin_vel_0 vs cmd_0", "Per-Step MSE Comparison", SAVE_PATH_LINVEL0, a_linvel)
 
-    # 图3: XY 角速度平方和
+    # 图3: ang_vel_0 MSE（相对 0）
     series = []
     for path, label in CSV_PATHS:
         try:
-            steps, values = compute_angvel_xy_norm_full(path, a_angvel)
+            steps, values = compute_angvel0_mse_full(path, a_angvel)
             series.append((label, steps, values))
         except Exception as e:
             print(f"[Warn] {path}: {e}")
-    plot_series(series, "(ang_vel_0² + ang_vel_1²)", "Angular Velocity XY Squared-Norm Comparison", SAVE_PATH_ANGVELXY, a_angvel)
+    plot_series(series, "MSE of ang_vel_0 vs 0", "Per-Step MSE Comparison (ang_vel_0)", SAVE_PATH_ANGVEL0, a_angvel)
 
-    # 图4: lin_vel_1 MSE  —— 新增
+    # 图4: ang_vel_1 MSE（相对 0）
+    series = []
+    for path, label in CSV_PATHS:
+        try:
+            steps, values = compute_angvel1_mse_full(path, a_angvel)
+            series.append((label, steps, values))
+        except Exception as e:
+            print(f"[Warn] {path}: {e}")
+    plot_series(series, "MSE of ang_vel_1 vs 0", "Per-Step MSE Comparison (ang_vel_1)", SAVE_PATH_ANGVEL1, a_angvel)
+
+    # 图5: lin_vel_1 MSE
     series = []
     for path, label in CSV_PATHS:
         try:
@@ -174,7 +210,7 @@ def main():
             print(f"[Warn] {path}: {e}")
     plot_series(series, "MSE of lin_vel_1 vs cmd_1", "Per-Step MSE Comparison (lin_vel_1)", SAVE_PATH_LINVEL1, a_linvel)
 
-    # 图5: ang_vel_2 MSE  —— 新增
+    # 图6: ang_vel_2 MSE
     series = []
     for path, label in CSV_PATHS:
         try:
@@ -183,6 +219,16 @@ def main():
         except Exception as e:
             print(f"[Warn] {path}: {e}")
     plot_series(series, "MSE of ang_vel_2 vs cmd_2", "Per-Step MSE Comparison (ang_vel_2)", SAVE_PATH_ANGVEL2, a_angvel)
+
+    # 图7: lin_vel_2 的平方
+    series = []
+    for path, label in CSV_PATHS:
+        try:
+            steps, values = compute_linvel2_sq_full(path, a_linvel)
+            series.append((label, steps, values))
+        except Exception as e:
+            print(f"[Warn] {path}: {e}")
+    plot_series(series, "lin_vel_2²", "Per-Step lin_vel_2² Comparison", SAVE_PATH_LINVEL2SQ, a_linvel)
 
 
 if __name__ == "__main__":
