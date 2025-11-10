@@ -8,15 +8,29 @@ class Go2Cfg:
     xml_path: str = "assets/mujoco/unitree_robots/go2/scene.xml"
 
     log_enable: bool = True
-    # policy_path: str = "policy/flat/1006-1.pt"
-    # policy_path: str = "policy/rough/1014-1.pt"
-    # logger_type: str = "our_flat"
-    # policy_path: str = "policy/rough/1107-1-s.pt"
+    # flat
+    # policy_path: str = "policy/rough/1110-1-s.pt"
     # logger_type: str = "our_flat_slim"
-    policy_path: str = "policy/wo_contact/rough/1108-1-s.pt"
-    logger_type: str = "our_wo_contact_flat_slim"
+    # policy_path: str = "policy/wo_contact/rough/1108-1-s.pt"
+    # logger_type: str = "our_wo_contact_flat_slim"
+    # policy_path: str = "policy/wo_fusion/rough/1109-1-s.pt"
+    # logger_type: str = "our_wo_fusion_flat_slim"
     # policy_path: str = "policy/dreamwaq/rough/1015-1.pt"
     # logger_type: str = "dreamwaq_flat"
+    # stair
+    # policy_path: str = "policy/rough/1107-1-s.pt"
+    # logger_type: str = "our_stair_slim"
+    # policy_path: str = "policy/wo_contact/rough/1108-1-s.pt"
+    # logger_type: str = "our_wo_contact_stair_slim"
+    # policy_path: str = "policy/wo_fusion/rough/1109-1-s.pt"
+    # logger_type: str = "our_wo_fusion_stair_slim"
+    # policy_path: str = "policy/dreamwaq/rough/1015-1.pt"
+    # logger_type: str = "dreamwaq_stair"
+    # slope
+    policy_path: str = "policy/rough/1107-1-s.pt"
+    logger_type: str = "our_slope30_slim"
+    # policy_path: str = "policy/dreamwaq/rough/1015-1.pt"
+    # logger_type: str = "dreamwaq_slope30"
 
     simulation_duration: float = 600.0
     simulation_dt: float = 0.005

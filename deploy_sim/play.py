@@ -9,6 +9,18 @@ from go2_cfg import Go2Cfg
 from go2_logger import Go2Logger
 
 
+def quat_to_euler_zyx(q, degrees=False):
+    """q=[qw,qx,qy,qz] → (roll, pitch, yaw) in ZYX order"""
+    qw, qx, qy, qz = np.asarray(q, float)
+    n = np.linalg.norm([qw, qx, qy, qz]);
+    qw, qx, qy, qz = qw / n, qx / n, qy / n, qz / n
+    roll = np.arctan2(2 * (qw * qx + qy * qz), 1 - 2 * (qx * qx + qy * qy))
+    pitch = np.arcsin(np.clip(2 * (qw * qy - qz * qx), -1.0, 1.0))
+    yaw = np.arctan2(2 * (qw * qz + qx * qy), 1 - 2 * (qy * qy + qz * qz))
+    r = np.array([roll, pitch, yaw])
+    return np.degrees(r) if degrees else r
+
+
 def get_gravity_orientation(quaternion):
     qw = quaternion[0]
     qx = quaternion[1]
@@ -105,7 +117,7 @@ class Env:
                 quat = self.d.sensor("imu_quat").data
                 ang_vel = self.d.sensor("imu_gyro").data
                 projected_gravity = get_gravity_orientation(quat)
-
+                rpy = quat_to_euler_zyx(quat)
                 q = self.get_q()
                 dq = self.get_dq()
                 # print(projected_gravity)
@@ -133,6 +145,7 @@ class Env:
                                               self.q_history,
                                               self.dq_history,
                                               self.action_history])
+                self.cfg.cmd[2] = 1.0 * (0 - rpy[2])
                 self.obs[:3] = self.cfg.cmd
                 self.obs[3:] = obs_history
 

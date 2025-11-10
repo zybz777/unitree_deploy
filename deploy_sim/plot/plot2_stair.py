@@ -5,30 +5,32 @@ import matplotlib.pyplot as plt
 
 # ===== 全局配置（按你的现有设置） =====
 CSV_PATHS = [
-    ("logs_csv/our_flat_slim/obs.csv",  "Our"),
-    ("logs_csv/our_wo_contact_flat_slim/obs.csv", "Our w/o contact"),
-    ("logs_csv/dreamwaq_flat/obs.csv",  "DreamWaQ"),
+    ("logs_csv/our_stair_slim/obs.csv", "Our"),
+    # ("logs_csv/our_wo_contact_stair_slim/obs.csv", "Our w/o contact"),
+    # ("logs_csv/our_wo_fusion_stair_slim/obs.csv", "w/o fusion"),
+    ("logs_csv/dreamwaq_stair/obs.csv", "DreamWaQ"),
 ]
 START_STEP = 1000
-END_STEP   = 1500
-DQ_PREFIX  = "dq_"
+END_STEP = 1500
+DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"
 
 # 输出路径
-SAVE_PATH_HEATMAP = "logs_csv/metrics_heatmap_7x2.png"
-SAVE_PATH_VALUES  = "logs_csv/metrics_values_7x2.csv"
-SAVE_PATH_SCORES  = "logs_csv/metrics_scores_7x2.csv"
+SAVE_PATH_HEATMAP = "logs_csv/stair/metrics_heatmap_7x2.png"
+SAVE_PATH_VALUES = "logs_csv/stair/metrics_values_7x2.csv"
+SAVE_PATH_SCORES = "logs_csv/stair/metrics_scores_7x2.csv"
 
 # ===== 指标定义（均为“越小越好”）=====
 METRIC_ROWS = [
-    ("lin0_mse",   "lin_vel_0 MSE↓"),
-    ("lin1_mse",   "lin_vel_1 MSE↓"),
-    ("ang2_mse",   "ang_vel_2 MSE↓"),
-    ("ang0_sq",    "ang_vel_0²↓"),
-    ("ang1_sq",    "ang_vel_1²↓"),
-    ("lin2_sq",    "lin_vel_2²↓"),
+    ("lin0_mse", "lin_vel_0 MSE↓"),
+    ("lin1_mse", "lin_vel_1 MSE↓"),
+    ("ang2_mse", "ang_vel_2 MSE↓"),
+    ("ang0_sq", "ang_vel_0²↓"),
+    ("ang1_sq", "ang_vel_1²↓"),
+    ("lin2_sq", "lin_vel_2²↓"),
     ("power_mean", "power (avg)↓"),
 ]
+
 
 # ===== 工具函数 =====
 def _sorted_cols(df, prefix):
@@ -41,21 +43,24 @@ def _sorted_cols(df, prefix):
         cols = sorted(cols)  # 回退
     return cols
 
+
 def _require_cols(df, needed, path):
     miss = [c for c in needed if c not in df.columns]
     if miss:
         raise ValueError(f"{path} 缺少列: {miss}")
 
+
 def compute_power_mean(df):
-    dq_cols  = _sorted_cols(df, DQ_PREFIX)
+    dq_cols = _sorted_cols(df, DQ_PREFIX)
     tau_cols = _sorted_cols(df, TAU_PREFIX)
     if len(dq_cols) != len(tau_cols):
         raise ValueError(f"列数量不匹配: dq={len(dq_cols)} vs tau={len(tau_cols)}")
 
-    dq  = np.abs(df[dq_cols].to_numpy(dtype=float))
+    dq = np.abs(df[dq_cols].to_numpy(dtype=float))
     tau = np.abs(df[tau_cols].to_numpy(dtype=float))
     per_step_power = np.sum(dq * tau, axis=1)
     return float(np.mean(per_step_power))
+
 
 def compute_metrics_for_csv(csv_path):
     if not os.path.exists(csv_path):
@@ -71,23 +76,23 @@ def compute_metrics_for_csv(csv_path):
 
     # 需要的列检查
     need_cols = [
-        "lin_vel_0","cmd_0",
-        "lin_vel_1","cmd_1",
-        "ang_vel_2","cmd_2",
-        "ang_vel_0","ang_vel_1",
+        "lin_vel_0", "cmd_0",
+        "lin_vel_1", "cmd_1",
+        "ang_vel_2", "cmd_2",
+        "ang_vel_0", "ang_vel_1",
         "lin_vel_2",
     ]
     _require_cols(d, need_cols, csv_path)
     # power 相关列检查在 compute_power_mean 内做
 
     # 逐项计算
-    lin0_mse = np.mean((d["lin_vel_0"].to_numpy(float) - d["cmd_0"].to_numpy(float))**2)
-    lin1_mse = np.mean((d["lin_vel_1"].to_numpy(float) - d["cmd_1"].to_numpy(float))**2)
-    ang2_mse = np.mean((d["ang_vel_2"].to_numpy(float) - d["cmd_2"].to_numpy(float))**2)
+    lin0_mse = np.mean((d["lin_vel_0"].to_numpy(float) - d["cmd_0"].to_numpy(float)) ** 2)
+    lin1_mse = np.mean((d["lin_vel_1"].to_numpy(float) - d["cmd_1"].to_numpy(float)) ** 2)
+    ang2_mse = np.mean((d["ang_vel_2"].to_numpy(float) - d["cmd_2"].to_numpy(float)) ** 2)
 
-    ang0_sq  = np.mean((d["ang_vel_0"].to_numpy(float))**2)
-    ang1_sq  = np.mean((d["ang_vel_1"].to_numpy(float))**2)
-    lin2_sq  = np.mean((d["lin_vel_2"].to_numpy(float))**2)
+    ang0_sq = np.mean((d["ang_vel_0"].to_numpy(float)) ** 2)
+    ang1_sq = np.mean((d["ang_vel_1"].to_numpy(float)) ** 2)
+    lin2_sq = np.mean((d["lin_vel_2"].to_numpy(float)) ** 2)
 
     power_avg = compute_power_mean(d)
 
@@ -95,11 +100,12 @@ def compute_metrics_for_csv(csv_path):
         "lin0_mse": lin0_mse,
         "lin1_mse": lin1_mse,
         "ang2_mse": ang2_mse,
-        "ang0_sq":  ang0_sq,
-        "ang1_sq":  ang1_sq,
-        "lin2_sq":  lin2_sq,
+        "ang0_sq": ang0_sq,
+        "ang1_sq": ang1_sq,
+        "lin2_sq": lin2_sq,
         "power_mean": power_avg,
     }
+
 
 def minmax_to_score_min_better(values_row):
     """把一行的原值(越小越好)映射到score∈[0,1]，1为最好"""
@@ -109,6 +115,7 @@ def minmax_to_score_min_better(values_row):
         return np.full_like(v, 0.5, dtype=float)
     return 1.0 - (v - vmin) / (vmax - vmin)
 
+
 # ===== 主流程 =====
 def main():
     # 计算数值表（原值）
@@ -116,7 +123,7 @@ def main():
     col_names = []
     for path, label in CSV_PATHS:
         stats = compute_metrics_for_csv(path)
-        col = [stats[key] for key, _nice in METRIC_ROWS]   # 按既定顺序取值
+        col = [stats[key] for key, _nice in METRIC_ROWS]  # 按既定顺序取值
         cols.append(col)
         col_names.append(label)
 
@@ -191,6 +198,7 @@ def main():
     os.makedirs(os.path.dirname(SAVE_PATH_HEATMAP), exist_ok=True)
     plt.savefig(SAVE_PATH_HEATMAP, dpi=200)
     print(f"[Saved] 热力表图像: {SAVE_PATH_HEATMAP}")
+
 
 if __name__ == "__main__":
     main()

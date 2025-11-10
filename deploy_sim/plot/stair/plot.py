@@ -3,38 +3,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+# ===== 场景标签（统一改这里即可） =====
+RUN_TAG = "stair"  # 例如改成 "slope10"、"flat" 等
+# ===================================
+
 # ===== 全局配置 =====
+# 如果你的数据目录命名遵循 *_{RUN_TAG}_* 规则，下面这两行会自动拼接正确路径
 CSV_PATHS = [
-    ("logs_csv/our_flat_slim/obs.csv", "Our"),
-    ("logs_csv/our_wo_contact_flat_slim/obs.csv", "Our w/o contact"),
-    ("logs_csv/dreamwaq_flat/obs.csv", "DreamWaQ"),
+    (f"logs_csv/our_{RUN_TAG}_slim/obs.csv",  "Our"),
+    (f"logs_csv/dreamwaq_{RUN_TAG}/obs.csv",  "DreamWaQ"),
 ]
 START_STEP = 1000
-END_STEP = 1500
-DQ_PREFIX = "dq_"
+END_STEP   = 1500
+DQ_PREFIX  = "dq_"
 TAU_PREFIX = "tau_"
 
 # === 平滑参数设置 ===
 GLOBAL_SMOOTHING = 0.98  # 默认平滑系数
-SMOOTHING_POWER = None  # 功率图平滑（None→用全局）
+SMOOTHING_POWER  = None  # 功率图平滑（None→用全局）
 SMOOTHING_LINVEL = 0.98  # 线速度相关 MSE/平方 的平滑
 SMOOTHING_ANGVEL = 0.98  # 角速度相关量（含 MSE）的平滑
 # ====================
 
-SAVE_PATH_POWER = "logs_csv/power_compare_smooth.png"
-SAVE_PATH_LINVEL0 = "logs_csv/linvel0_mse_compare_smooth.png"
-SAVE_PATH_LINVEL1 = "logs_csv/linvel1_mse_compare_smooth.png"
-SAVE_PATH_ANGVEL2 = "logs_csv/angvel2_mse_compare_smooth.png"
-SAVE_PATH_LINVEL2SQ = "logs_csv/linvel2_sq_compare_smooth.png"
-SAVE_PATH_ANGVEL0 = "logs_csv/angvel0_mse_compare_smooth.png"
-SAVE_PATH_ANGVEL1 = "logs_csv/angvel1_mse_compare_smooth.png"
+# 统一的输出目录（随 RUN_TAG 改变）
+OUT_DIR = f"logs_csv/{RUN_TAG}"
 
-# === 新增：箱线图保存路径 ===
-SAVE_PATH_BOX_TRACK = "logs_csv/box_tracking_mse.png"  # 跟踪误差
-SAVE_PATH_BOX_STAB = "logs_csv/box_stability_mse.png"  # 稳定性
-SAVE_PATH_BOX_ENERGY = "logs_csv/box_energy.png"  # 能耗
-
-
+SAVE_PATH_POWER     = os.path.join(OUT_DIR, "power_compare_smooth.png")
+SAVE_PATH_LINVEL0   = os.path.join(OUT_DIR, "linvel0_mse_compare_smooth.png")
+SAVE_PATH_LINVEL1   = os.path.join(OUT_DIR, "linvel1_mse_compare_smooth.png")
+SAVE_PATH_ANGVEL2   = os.path.join(OUT_DIR, "angvel2_mse_compare_smooth.png")
+SAVE_PATH_LINVEL2SQ = os.path.join(OUT_DIR, "linvel2_sq_compare_smooth.png")
+# 拆分 XY 为两个单独角速度的 MSE（相对 0）
+SAVE_PATH_ANGVEL0   = os.path.join(OUT_DIR, "angvel0_mse_compare_smooth.png")
+SAVE_PATH_ANGVEL1   = os.path.join(OUT_DIR, "angvel1_mse_compare_smooth.png")
 # =====================
 
 
@@ -57,14 +58,14 @@ def smooth_ema(x, alpha):
 def compute_power_full(csv_path, alpha):
     """整段计算每步总功率，并平滑。"""
     df = pd.read_csv(csv_path)
-    dq_cols = sorted([c for c in df.columns if c.startswith(DQ_PREFIX)],
-                     key=lambda x: int(x[len(DQ_PREFIX):]) if x[len(DQ_PREFIX):].isdigit() else x)
+    dq_cols  = sorted([c for c in df.columns if c.startswith(DQ_PREFIX)],
+                      key=lambda x: int(x[len(DQ_PREFIX):]) if x[len(DQ_PREFIX):].isdigit() else x)
     tau_cols = sorted([c for c in df.columns if c.startswith(TAU_PREFIX)],
                       key=lambda x: int(x[len(TAU_PREFIX):]) if x[len(TAU_PREFIX):].isdigit() else x)
     if "step" not in df.columns or len(dq_cols) == 0 or len(tau_cols) == 0 or len(dq_cols) != len(tau_cols):
         raise ValueError(f"{csv_path} 功率相关列缺失或数量不匹配")
-    dq = np.abs(df[dq_cols].to_numpy(dtype=float))
-    tau = np.abs(df[tau_cols].to_numpy(dtype=float))
+    dq   = np.abs(df[dq_cols].to_numpy(dtype=float))
+    tau  = np.abs(df[tau_cols].to_numpy(dtype=float))
     power = np.sum(dq * tau, axis=1)
     steps = df["step"].to_numpy()
     return steps, smooth_ema(power, alpha)
@@ -94,7 +95,7 @@ def compute_angvel2_mse_full(csv_path, alpha):
 def compute_linvel2_sq_full(csv_path, alpha):
     df = pd.read_csv(csv_path)
     lin2 = df["lin_vel_2"].to_numpy(dtype=float)
-    sq = lin2 ** 2
+    sq   = lin2 ** 2
     steps = df["step"].to_numpy()
     return steps, smooth_ema(sq, alpha)
 
@@ -123,7 +124,7 @@ def plot_series(series, ylabel, title, save_path, alpha):
     for label, steps, values in series:
         mask = (steps >= START_STEP) & (steps < END_STEP)
         steps_clip = steps[mask]
-        vals_clip = values[mask]
+        vals_clip  = values[mask]
         clipped.append((label, steps_clip, vals_clip))
 
     common_steps = None
@@ -156,7 +157,7 @@ def plot_series(series, ylabel, title, save_path, alpha):
 
 def main():
     # 获取每图平滑值（若未定义则用全局默认）
-    a_power = SMOOTHING_POWER if SMOOTHING_POWER is not None else GLOBAL_SMOOTHING
+    a_power  = SMOOTHING_POWER  if SMOOTHING_POWER  is not None else GLOBAL_SMOOTHING
     a_linvel = SMOOTHING_LINVEL if SMOOTHING_LINVEL is not None else GLOBAL_SMOOTHING
     a_angvel = SMOOTHING_ANGVEL if SMOOTHING_ANGVEL is not None else GLOBAL_SMOOTHING
 
