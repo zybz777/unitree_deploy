@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import os
 
 # ===== 场景标签（统一改这里即可） =====
-RUN_TAG = "stair15"  # 例如改成 "slope10"、"flat" 等
+RUN_TAG = "random_rough"  # 例如改成 "slope10"、"flat" 等
 # ===================================
 
 # ===== 全局配置 =====
@@ -14,7 +14,7 @@ CSV_PATHS = [
     (f"logs_csv/dreamwaq_{RUN_TAG}/obs.csv", "DreamWaQ"),
     (f"logs_csv/baseline_{RUN_TAG}/obs.csv", "Baseline"),
 ]
-START_STEP = 250
+START_STEP = 150
 END_STEP = 1250
 DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"

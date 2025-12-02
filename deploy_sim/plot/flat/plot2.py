@@ -11,31 +11,34 @@ RUN_TAG = "flat"  # 比如改成 "slope15"、"flat"、"slope10" 等
 # 若你的数据目录命名遵循 our_{RUN_TAG}_slim / dreamwaq_{RUN_TAG} 规则，下面会自动拼接
 CSV_PATHS = [
     (f"logs_csv/our_{RUN_TAG}_slim/obs.csv", "Our"),
-    # (f"logs_csv/our_wo_contact_{RUN_TAG}_slim/obs.csv", "Our w/o contact"),
-    # (f"logs_csv/our_wo_fusion_{RUN_TAG}_slim/obs.csv",  "Our w/o fusion"),
+    (f"logs_csv/our_wo_contact_{RUN_TAG}_slim/obs.csv", "Our w/o contact"),
+    (f"logs_csv/our_wo_fusion_{RUN_TAG}_slim/obs.csv",  "Our w/o fusion"),
     (f"logs_csv/dreamwaq_{RUN_TAG}/obs.csv", "DreamWaQ"),
+    # (f"logs_csv/estimator_{RUN_TAG}/obs.csv", "Estimator"),
+    # (f"logs_csv/baseline_{RUN_TAG}/obs.csv", "Baseline"),
 ]
 START_STEP = 1000
-END_STEP   = 1500
-DQ_PREFIX  = "dq_"
+END_STEP = 1250
+DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"
 
 # ===== 输出路径（随 RUN_TAG 自动切换） =====
 OUT_DIR = f"logs_csv/{RUN_TAG}"
 SAVE_PATH_HEATMAP = os.path.join(OUT_DIR, "metrics_heatmap_7x2.png")
-SAVE_PATH_VALUES  = os.path.join(OUT_DIR, "metrics_values_7x2.csv")
-SAVE_PATH_SCORES  = os.path.join(OUT_DIR, "metrics_scores_7x2.csv")
+SAVE_PATH_VALUES = os.path.join(OUT_DIR, "metrics_values_7x2.csv")
+SAVE_PATH_SCORES = os.path.join(OUT_DIR, "metrics_scores_7x2.csv")
 
 # ===== 指标定义（均为“越小越好”）=====
 METRIC_ROWS = [
-    ("lin0_mse",  "lin_vel_0 MSE↓"),
-    ("lin1_mse",  "lin_vel_1 MSE↓"),
-    ("ang2_mse",  "ang_vel_2 MSE↓"),
-    ("ang0_sq",   "ang_vel_0²↓"),
-    ("ang1_sq",   "ang_vel_1²↓"),
-    ("lin2_sq",   "lin_vel_2²↓"),
-    ("power_mean","power (avg)↓"),
+    ("lin0_mse", "lin_vel_0 MSE↓"),
+    ("lin1_mse", "lin_vel_1 MSE↓"),
+    ("ang2_mse", "ang_vel_2 MSE↓"),
+    ("ang0_sq", "ang_vel_0²↓"),
+    ("ang1_sq", "ang_vel_1²↓"),
+    ("lin2_sq", "lin_vel_2²↓"),
+    ("power_mean", "power (avg)↓"),
 ]
+
 
 # ===== 工具函数 =====
 def _sorted_cols(df, prefix):
@@ -48,13 +51,15 @@ def _sorted_cols(df, prefix):
         cols = sorted(cols)  # 回退
     return cols
 
+
 def _require_cols(df, needed, path):
     miss = [c for c in needed if c not in df.columns]
     if miss:
         raise ValueError(f"{path} 缺少列: {miss}")
 
+
 def compute_power_mean(df):
-    dq_cols  = _sorted_cols(df, DQ_PREFIX)
+    dq_cols = _sorted_cols(df, DQ_PREFIX)
     tau_cols = _sorted_cols(df, TAU_PREFIX)
     if len(dq_cols) != len(tau_cols):
         raise ValueError(f"列数量不匹配: dq={len(dq_cols)} vs tau={len(tau_cols)}")
@@ -62,6 +67,7 @@ def compute_power_mean(df):
     tau = np.abs(df[tau_cols].to_numpy(dtype=float))
     per_step_power = np.sum(dq * tau, axis=1)
     return float(np.mean(per_step_power))
+
 
 def compute_metrics_for_csv(csv_path):
     if not os.path.exists(csv_path):
@@ -90,21 +96,22 @@ def compute_metrics_for_csv(csv_path):
     lin1_mse = np.mean((d["lin_vel_1"].to_numpy(float) - d["cmd_1"].to_numpy(float)) ** 2)
     ang2_mse = np.mean((d["ang_vel_2"].to_numpy(float) - d["cmd_2"].to_numpy(float)) ** 2)
 
-    ang0_sq  = np.mean((d["ang_vel_0"].to_numpy(float)) ** 2)
-    ang1_sq  = np.mean((d["ang_vel_1"].to_numpy(float)) ** 2)
-    lin2_sq  = np.mean((d["lin_vel_2"].to_numpy(float)) ** 2)
+    ang0_sq = np.mean((d["ang_vel_0"].to_numpy(float)) ** 2)
+    ang1_sq = np.mean((d["ang_vel_1"].to_numpy(float)) ** 2)
+    lin2_sq = np.mean((d["lin_vel_2"].to_numpy(float)) ** 2)
 
     power_avg = compute_power_mean(d)
 
     return {
-        "lin0_mse":   lin0_mse,
-        "lin1_mse":   lin1_mse,
-        "ang2_mse":   ang2_mse,
-        "ang0_sq":    ang0_sq,
-        "ang1_sq":    ang1_sq,
-        "lin2_sq":    lin2_sq,
+        "lin0_mse": lin0_mse,
+        "lin1_mse": lin1_mse,
+        "ang2_mse": ang2_mse,
+        "ang0_sq": ang0_sq,
+        "ang1_sq": ang1_sq,
+        "lin2_sq": lin2_sq,
         "power_mean": power_avg,
     }
+
 
 def minmax_to_score_min_better(values_row):
     """把一行的原值(越小越好)映射到score∈[0,1]，1为最好"""
@@ -113,6 +120,7 @@ def minmax_to_score_min_better(values_row):
     if np.isclose(vmin, vmax):
         return np.full_like(v, 0.5, dtype=float)
     return 1.0 - (v - vmin) / (vmax - vmin)
+
 
 # ===== 主流程 =====
 def main():
@@ -196,6 +204,7 @@ def main():
     plt.tight_layout()
     plt.savefig(SAVE_PATH_HEATMAP, dpi=200)
     print(f"[Saved] 热力表图像: {SAVE_PATH_HEATMAP}")
+
 
 if __name__ == "__main__":
     main()

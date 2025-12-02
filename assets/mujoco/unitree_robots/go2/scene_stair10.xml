@@ -110,83 +110,83 @@
 <!--        <geom pos="24.5 0 11.325" type="box" size="0.15 4 0.075" quat="1.0 0 0 0"/>-->
 <!--        <geom pos="24.8 0 11.475" type="box" size="0.15 4 0.075" quat="1.0 0 0 0"/>-->
         <!--    stair10    -->
-        <!--        <geom pos="2.0 0 0.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="2.3 0 0.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="2.6 0 0.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="2.9 0 0.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="3.2 0 0.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="3.5 0 0.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="3.8 0 0.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="4.1 0 0.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="4.4 0 0.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="4.7 0 0.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="5.0 0 1.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="5.3 0 1.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="5.6 0 1.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="5.9 0 1.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="6.2 0 1.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="6.5 0 1.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="6.8 0 1.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="7.1 0 1.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="7.4 0 1.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="7.7 0 1.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="8.0 0 2.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="8.3 0 2.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="8.6 0 2.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="8.9 0 2.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="9.2 0 2.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="9.5 0 2.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="9.8 0 2.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="10.1 0 2.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="10.4 0 2.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="10.7 0 2.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="11.0 0 3.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="11.3 0 3.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="11.6 0 3.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="11.9 0 3.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="12.2 0 3.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="12.5 0 3.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="12.8 0 3.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="13.1 0 3.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="13.4 0 3.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="13.7 0 3.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="14.0 0 4.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="14.3 0 4.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="14.6 0 4.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="14.9 0 4.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="15.2 0 4.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="15.5 0 4.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="15.8 0 4.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="16.1 0 4.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="16.4 0 4.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="16.7 0 4.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="17.0 0 5.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="17.3 0 5.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="17.6 0 5.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="17.9 0 5.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="18.2 0 5.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="18.5 0 5.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="18.8 0 5.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="19.1 0 5.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="19.4 0 5.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="19.7 0 5.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="20.0 0 6.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="20.3 0 6.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="20.6 0 6.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="20.9 0 6.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="21.2 0 6.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="21.5 0 6.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="21.8 0 6.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="22.1 0 6.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="22.4 0 6.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="22.7 0 6.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="23.0 0 7.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="23.3 0 7.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="23.6 0 7.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="23.9 0 7.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="24.2 0 7.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="24.5 0 7.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
-        <!--        <geom pos="24.8 0 7.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>-->
+                <geom pos="2.0 0 0.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="2.3 0 0.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="2.6 0 0.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="2.9 0 0.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="3.2 0 0.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="3.5 0 0.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="3.8 0 0.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="4.1 0 0.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="4.4 0 0.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="4.7 0 0.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="5.0 0 1.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="5.3 0 1.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="5.6 0 1.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="5.9 0 1.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="6.2 0 1.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="6.5 0 1.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="6.8 0 1.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="7.1 0 1.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="7.4 0 1.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="7.7 0 1.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="8.0 0 2.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="8.3 0 2.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="8.6 0 2.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="8.9 0 2.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="9.2 0 2.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="9.5 0 2.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="9.8 0 2.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="10.1 0 2.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="10.4 0 2.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="10.7 0 2.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="11.0 0 3.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="11.3 0 3.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="11.6 0 3.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="11.9 0 3.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="12.2 0 3.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="12.5 0 3.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="12.8 0 3.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="13.1 0 3.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="13.4 0 3.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="13.7 0 3.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="14.0 0 4.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="14.3 0 4.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="14.6 0 4.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="14.9 0 4.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="15.2 0 4.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="15.5 0 4.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="15.8 0 4.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="16.1 0 4.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="16.4 0 4.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="16.7 0 4.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="17.0 0 5.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="17.3 0 5.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="17.6 0 5.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="17.9 0 5.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="18.2 0 5.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="18.5 0 5.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="18.8 0 5.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="19.1 0 5.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="19.4 0 5.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="19.7 0 5.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="20.0 0 6.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="20.3 0 6.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="20.6 0 6.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="20.9 0 6.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="21.2 0 6.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="21.5 0 6.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="21.8 0 6.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="22.1 0 6.750" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="22.4 0 6.850" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="22.7 0 6.950" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="23.0 0 7.050" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="23.3 0 7.150" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="23.6 0 7.250" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="23.9 0 7.350" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="24.2 0 7.450" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="24.5 0 7.550" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
+                <geom pos="24.8 0 7.650" type="box" size="0.15 4 0.05" quat="1.0 0 0 0"/>
 
         <!--    stair5    -->
 <!--                <geom pos="2.0 0 0.025" type="box" size="0.15 4 0.025" quat="1.0 0 0 0"/>-->

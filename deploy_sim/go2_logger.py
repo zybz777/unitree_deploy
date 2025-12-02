@@ -5,15 +5,21 @@ import pandas as pd
 
 
 class Go2Logger:
-    def __init__(self, log_type="flat", log_dir="logs_csv", file_name="obs.csv"):
-        save_dir = os.path.join(log_dir, log_type)
-        os.makedirs(save_dir, exist_ok=True)
-        path = os.path.join(save_dir, file_name)
-        if os.path.exists(path):
-            os.remove(path)
-        self.df_path = os.path.join(save_dir, file_name)
+    def __init__(self, log_enable=True, log_type="flat", log_dir="logs_csv", file_name="obs.csv"):
+        self.log_enable = log_enable
+        if self.log_enable:
+            save_dir = os.path.join(log_dir, log_type)
+            os.makedirs(save_dir, exist_ok=True)
+            path = os.path.join(save_dir, file_name)
+            if os.path.exists(path):
+                os.remove(path)
+            self.df_path = os.path.join(save_dir, file_name)
+        else:
+            self.df_path = None
 
     def log(self, obs: dict, step: int):
+        if not self.log_enable:
+            return
         # 展开字典
         flat_dict = {}
         for key, val in obs.items():

@@ -3,22 +3,30 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# ===== 全局配置（按你的现有设置） =====
+# ===== 场景标签（统一改这里即可） =====
+RUN_TAG = "random_rough"  # 比如改成 "slope15"、"flat"、"slope10" 等
+# ===================================
+
+# ===== 全局配置 =====
+# 若你的数据目录命名遵循 our_{RUN_TAG}_slim / dreamwaq_{RUN_TAG} 规则，下面会自动拼接
 CSV_PATHS = [
-    ("logs_csv/our_stair_slim/obs.csv", "Our"),
-    # ("logs_csv/our_wo_contact_stair_slim/obs.csv", "Our w/o contact"),
-    # ("logs_csv/our_wo_fusion_stair_slim/obs.csv", "w/o fusion"),
-    ("logs_csv/dreamwaq_stair/obs.csv", "DreamWaQ"),
+    (f"logs_csv/our_{RUN_TAG}_slim/obs.csv", "Our"),
+    (f"logs_csv/our_wo_contact_{RUN_TAG}_slim/obs.csv", "Our w/o contact"),
+    (f"logs_csv/our_wo_fusion_{RUN_TAG}_slim/obs.csv",  "Our w/o fusion"),
+    # (f"logs_csv/dreamwaq_{RUN_TAG}/obs.csv", "DreamWaQ"),
+    # (f"logs_csv/estimator_{RUN_TAG}/obs.csv", "Estimator"),
+    # (f"logs_csv/baseline_{RUN_TAG}/obs.csv", "Baseline"),
 ]
 START_STEP = 1000
-END_STEP = 1500
+END_STEP = 1250
 DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"
 
-# 输出路径
-SAVE_PATH_HEATMAP = "logs_csv/stair/metrics_heatmap_7x2.png"
-SAVE_PATH_VALUES = "logs_csv/stair/metrics_values_7x2.csv"
-SAVE_PATH_SCORES = "logs_csv/stair/metrics_scores_7x2.csv"
+# ===== 输出路径（随 RUN_TAG 自动切换） =====
+OUT_DIR = f"logs_csv/{RUN_TAG}"
+SAVE_PATH_HEATMAP = os.path.join(OUT_DIR, "metrics_heatmap_7x2.png")
+SAVE_PATH_VALUES = os.path.join(OUT_DIR, "metrics_values_7x2.csv")
+SAVE_PATH_SCORES = os.path.join(OUT_DIR, "metrics_scores_7x2.csv")
 
 # ===== 指标定义（均为“越小越好”）=====
 METRIC_ROWS = [
@@ -55,7 +63,6 @@ def compute_power_mean(df):
     tau_cols = _sorted_cols(df, TAU_PREFIX)
     if len(dq_cols) != len(tau_cols):
         raise ValueError(f"列数量不匹配: dq={len(dq_cols)} vs tau={len(tau_cols)}")
-
     dq = np.abs(df[dq_cols].to_numpy(dtype=float))
     tau = np.abs(df[tau_cols].to_numpy(dtype=float))
     per_step_power = np.sum(dq * tau, axis=1)
@@ -83,9 +90,8 @@ def compute_metrics_for_csv(csv_path):
         "lin_vel_2",
     ]
     _require_cols(d, need_cols, csv_path)
-    # power 相关列检查在 compute_power_mean 内做
 
-    # 逐项计算
+    # 逐项计算（越小越好）
     lin0_mse = np.mean((d["lin_vel_0"].to_numpy(float) - d["cmd_0"].to_numpy(float)) ** 2)
     lin1_mse = np.mean((d["lin_vel_1"].to_numpy(float) - d["cmd_1"].to_numpy(float)) ** 2)
     ang2_mse = np.mean((d["ang_vel_2"].to_numpy(float) - d["cmd_2"].to_numpy(float)) ** 2)
@@ -118,6 +124,8 @@ def minmax_to_score_min_better(values_row):
 
 # ===== 主流程 =====
 def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
+
     # 计算数值表（原值）
     cols = []
     col_names = []
@@ -138,12 +146,12 @@ def main():
     for r in vals.index:
         scores.loc[r] = minmax_to_score_min_better(vals.loc[r].values)
 
-    # 平均名次（1=最好，2=次之；这里只有两列）
-    ranks = vals.rank(axis=1, ascending=True, method="average")  # 越小越好
+    # 平均名次（1=最好；越小越好）
+    ranks = vals.rank(axis=1, ascending=True, method="average")
     avg_rank = ranks.mean(axis=0).sort_values()
     print("\n=== 平均名次（Avg. Rank, 越小越好）===\n", avg_rank)
 
-    # 相对 DreamWaQ 的改进百分比（越小越好场景： (base - val)/base ）
+    # 相对 DreamWaQ 的改进百分比（越小越好：(base - val)/base）
     if "DreamWaQ" in vals.columns:
         base = vals["DreamWaQ"]
         print("\n=== 相对 DreamWaQ 的改进(%)（正数=更好）===")
@@ -152,19 +160,18 @@ def main():
                 continue
             imp = (base - vals[meth]) / base * 100.0
             print(f"\n[{meth}]")
-            print((imp).rename(lambda s: f"{s}").to_string(float_format=lambda x: f"{x:,.2f}"))
+            print(imp.to_string(float_format=lambda x: f"{x:,.2f}"))
     else:
         print("\n[提示] 未找到 DreamWaQ 列，跳过相对改进统计。")
 
     # 保存原值和得分
-    os.makedirs(os.path.dirname(SAVE_PATH_VALUES), exist_ok=True)
     vals.to_csv(SAVE_PATH_VALUES)
     scores.to_csv(SAVE_PATH_SCORES)
     print(f"\n[Saved] 原值表: {SAVE_PATH_VALUES}")
     print(f"[Saved] 得分表: {SAVE_PATH_SCORES}")
 
     # 画热力表
-    fig_h, ax = plt.subplots(figsize=(4.8, 3.6))  # 两列时这个尺寸足够清晰
+    fig_h, ax = plt.subplots(figsize=(4.8, 3.6))  # 两列时这个尺寸清晰；方法多时可调大
     im = ax.imshow(scores.values.astype(float), cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
 
     # 轴刻度
@@ -173,9 +180,8 @@ def main():
     ax.set_yticks(np.arange(len(vals.index)))
     ax.set_yticklabels(vals.index)
 
-    # 单元格写入原值（科学计数或三位有效数字）
+    # 单元格内写原值（自适应格式）
     def fmt(x):
-        # 兼顾数量级差异
         if x == 0:
             return "0"
         ax_abs = abs(x)
@@ -185,7 +191,8 @@ def main():
 
     for i in range(vals.shape[0]):
         for j in range(vals.shape[1]):
-            ax.text(j, i, fmt(float(vals.iloc[i, j])), va="center", ha="center", fontsize=8, color="black")
+            ax.text(j, i, fmt(float(vals.iloc[i, j])), va="center", ha="center",
+                    fontsize=8, color="black")
 
     cbar = fig_h.colorbar(im, ax=ax, shrink=0.85)
     cbar.set_label("Normalized score (higher is better)")
@@ -195,7 +202,6 @@ def main():
     ax.set_ylabel("Metrics")
 
     plt.tight_layout()
-    os.makedirs(os.path.dirname(SAVE_PATH_HEATMAP), exist_ok=True)
     plt.savefig(SAVE_PATH_HEATMAP, dpi=200)
     print(f"[Saved] 热力表图像: {SAVE_PATH_HEATMAP}")
 

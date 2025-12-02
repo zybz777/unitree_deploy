@@ -2,32 +2,43 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
+# ===== 场景标签（统一改这里即可） =====
+RUN_TAG = "boxes"  # 例如改成 "slope10"、"flat" 等
+# ===================================
+
 # ===== 全局配置 =====
+# 如果你的数据目录命名遵循 *_{RUN_TAG}_* 规则，下面这两行会自动拼接正确路径
 CSV_PATHS = [
-    ("logs_csv/our_stair_slim/obs.csv", "Our"),
-    # ("logs_csv/our_wo_contact_stair_slim/obs.csv", "Our w/o contact"),
-    # ("logs_csv/our_wo_fusion_stair_slim/obs.csv", "Our w/o fusion"),
-    ("logs_csv/dreamwaq_stair/obs.csv", "DreamWaQ"),
+    (f"logs_csv/our_{RUN_TAG}_slim/obs.csv", "Our"),
+    (f"logs_csv/dreamwaq_{RUN_TAG}/obs.csv", "DreamWaQ"),
+    (f"logs_csv/baseline_{RUN_TAG}/obs.csv", "Baseline"),
 ]
-START_STEP = 1000
-END_STEP = 1500
+START_STEP = 150
+END_STEP = 1250
 DQ_PREFIX = "dq_"
 TAU_PREFIX = "tau_"
 
 # === 平滑参数设置 ===
-GLOBAL_SMOOTHING = 0.9  # 默认平滑系数
+GLOBAL_SMOOTHING = 0.98  # 默认平滑系数
 SMOOTHING_POWER = None  # 功率图平滑（None→用全局）
-SMOOTHING_LINVEL = None  # 线速度相关 MSE/平方 的平滑
-SMOOTHING_ANGVEL = None  # 角速度相关量（含 MSE）的平滑
+SMOOTHING_LINVEL = 0.98  # 线速度相关 MSE/平方 的平滑
+SMOOTHING_ANGVEL = 0.98  # 角速度相关量（含 MSE）的平滑
 # ====================
 
-SAVE_PATH_POWER = "logs_csv/stair/power_compare_smooth.png"
-SAVE_PATH_LINVEL0 = "logs_csv/stair/linvel0_mse_compare_smooth.png"
-SAVE_PATH_LINVEL1 = "logs_csv/stair/linvel1_mse_compare_smooth.png"
-SAVE_PATH_ANGVEL2 = "logs_csv/stair/angvel2_mse_compare_smooth.png"
-SAVE_PATH_LINVEL2SQ = "logs_csv/stair/linvel2_sq_compare_smooth.png"
-SAVE_PATH_ANGVEL0 = "logs_csv/stair/angvel0_mse_compare_smooth.png"
-SAVE_PATH_ANGVEL1 = "logs_csv/stair/angvel1_mse_compare_smooth.png"
+# 统一的输出目录（随 RUN_TAG 改变）
+OUT_DIR = f"logs_csv/{RUN_TAG}"
+
+SAVE_PATH_POWER = os.path.join(OUT_DIR, "power_compare_smooth.png")
+SAVE_PATH_LINVEL0 = os.path.join(OUT_DIR, "linvel0_mse_compare_smooth.png")
+SAVE_PATH_LINVEL1 = os.path.join(OUT_DIR, "linvel1_mse_compare_smooth.png")
+SAVE_PATH_ANGVEL2 = os.path.join(OUT_DIR, "angvel2_mse_compare_smooth.png")
+SAVE_PATH_LINVEL2SQ = os.path.join(OUT_DIR, "linvel2_sq_compare_smooth.png")
+# 拆分 XY 为两个单独角速度的 MSE（相对 0）
+SAVE_PATH_ANGVEL0 = os.path.join(OUT_DIR, "angvel0_mse_compare_smooth.png")
+SAVE_PATH_ANGVEL1 = os.path.join(OUT_DIR, "angvel1_mse_compare_smooth.png")
+
+
 # =====================
 
 

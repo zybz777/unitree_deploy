@@ -63,7 +63,7 @@ class Env:
         self.action_history = np.zeros_like(self.q_history, dtype=np.float32)
         self.rl_start_flag: bool = False
         # logger
-        self.logger = Go2Logger(log_type=self.cfg.logger_type)
+        self.logger = Go2Logger(log_enable=self.cfg.log_enable, log_type=self.cfg.logger_type)
 
     def get_q(self):
         q = np.array([
@@ -145,14 +145,21 @@ class Env:
                                               self.q_history,
                                               self.dq_history,
                                               self.action_history])
-                self.cfg.cmd[2] = 1.0 * (0 - rpy[2])
+                # 仅在stair5 or 15 使用
+                self.cfg.cmd[1] = 2.0 * (0 - self.d.sensor("frame_pos").data[1])
+                self.cfg.cmd[2] = 5.0 * (0 - rpy[2])
+
+                # self.cfg.cmd[2] = 1.0 * (0 - rpy[2])
+
                 self.obs[:3] = self.cfg.cmd
                 self.obs[3:] = obs_history
+                # print(self.d.sensor("frame_pos").data)
 
                 obs_tensor = torch.from_numpy(self.obs).to(self.device)
-                self.action[:] = self.policy(obs_tensor).cpu().detach().numpy()
-
+                self.action[:] = self.policy(obs_tensor).cpu().detach().numpy().clip(-100, 100)
                 target_q = self.cfg.default_angles + self.cfg.action_scale * self.action
+                if step_start - start_time < 0.5:
+                    target_q = self.cfg.default_angles
 
                 for _ in range(self.cfg.control_decimation):
                     tau = pd_control(target_q, self.get_q(), self.cfg.kps, 0, self.get_dq(), self.cfg.kds)
